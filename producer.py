@@ -8,13 +8,12 @@ producer = KafkaProducer(
     value_serializer=lambda m: dumps(m).encode('utf-8')
 )
 
-file_end = False
-while not file_end:
-    data = read_file()
+while True:
+    data = read_file('expenses_budget_vs_actual.csv')
     col = data.columns.tolist()
     topic = 'budget'
-    report = {}
 
+    report = {}
     for row in data.values:
         i = 0
         for val in row:
@@ -22,6 +21,5 @@ while not file_end:
             i += 1
 
         producer.send(topic, report)
-        print(f'Message has been sent to "{topic}" topic')
+        print(f'Message was sent to "{topic}" topic')
         sleep(2)
-    file_end = True
